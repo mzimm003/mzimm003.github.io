@@ -14,15 +14,24 @@ Mark Zimmerman's Portfolio
 
    projects/*/*
    
+Education
+-----------
+   **Master of Science in Computer Science, Machine Learning**
+      *Georgia Institute of Technology*
+   **Bachelor of Science, Mathematics**
+      *Univeristy of California, Riverside*
+   **Certificate of Accounting**
+      *University of California, Los Angeles - Extension*
 
 Projects
 ---------
 
 :ref:`chess-bot`
 ^^^^^^^^^^^^^^^^^^
-Machine Learning applied to chess so that I don't have to play anymore. Here I 
-compile and process datasets to support endeavors in supervised learning, 
-reinforcement learning, and generative models.
+
+   Machine Learning applied to chess so that I don't have to play anymore. Here I 
+   compile and preprocess datasets to support endeavors in supervised learning, 
+   reinforcement learning, and generative models.
 
 :ref:`Kaggle`
 ^^^^^^^^^^^^^^^^^^
