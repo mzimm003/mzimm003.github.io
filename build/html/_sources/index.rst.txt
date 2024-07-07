@@ -7,7 +7,7 @@ Mark Zimmerman's Portfolio
 ======================================================
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 4
    :caption: Projects:
    :hidden:
    :glob:
