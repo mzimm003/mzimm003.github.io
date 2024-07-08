@@ -99,6 +99,41 @@ To create the database then is a matter of submitting the moves described in the
 PGN file to the environment, saving observations with appropriate labels all the
 while.
 
+.. image:: /_static/dataProcessing.png
+    :scale: 35%
+    :align: center
+
+Further, the database is refined to concentrate on more relevant datapoints. On 
+advice provided by the `DeepChess <https://arxiv.org/abs/1711.09667>`_ paper,
+this includes avoiding positions very early in the game (first 5 moves),
+positions immediately after the capture of a piece, and games which ended in a
+draw.
+
+The Stats
+^^^^^^^^^^^^
++-----------------------------+-------------------------------------+
+| Measure                     | Value                               |
++=============================+=====================================+
+|  Number of games processed  |                                     |
++-----------------------------+-------------------------------------+
+|  Size of games processed    | GB                                  |
++-----------------------------+-------------------------------------+
+|  Number of observations     |                                     |
++-----------------------------+-------------------------------------+
+|  Size of observations       | GB                                  |
++-----------------------------+-------------------------------------+
+
+
+The Tricky Bit
+^^^^^^^^^^^^^^^^
+The size of the database is considerable, and difficult to fit onto RAM all at
+once. It becomes necessary then to split the database to be loaded to RAM 
+piecemeal. This presents a few issues, particularly when batching data:
+
+* RAM usage must remain stable as one piece finishes and the next is loaded.
+* Multiprocessing must remain possible to expedite batching
+
+
 Machine Learning Engineering
 ------------------------------
 

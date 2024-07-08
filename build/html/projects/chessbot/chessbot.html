@@ -70,6 +70,8 @@
 <li class="toctree-l2"><a class="reference internal" href="#data-engineering">Data Engineering</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#data-gathering">Data Gathering</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#data-preprocessing">Data Preprocessing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-stats">The Stats</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-tricky-bit">The Tricky Bit</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#machine-learning-engineering">Machine Learning Engineering</a><ul>
@@ -256,6 +258,47 @@ recent positions.</p></td>
 </details><p>To create the database then is a matter of submitting the moves described in the
 PGN file to the environment, saving observations with appropriate labels all the
 while.</p>
+<a class="reference internal image-reference" href="../../_images/dataProcessing.png"><img alt="../../_images/dataProcessing.png" class="align-center" src="../../_images/dataProcessing.png" style="width: 467.95px; height: 243.95px;" />
+</a>
+<p>Further, the database is refined to concentrate on more relevant datapoints. On
+advice provided by the <a class="reference external" href="https://arxiv.org/abs/1711.09667">DeepChess</a> paper,
+this includes avoiding positions very early in the game (first 5 moves),
+positions immediately after the capture of a piece, and games which ended in a
+draw.</p>
+</section>
+<section id="the-stats">
+<h3>The Stats<a class="headerlink" href="#the-stats" title="Link to this heading">¶</a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Measure</p></th>
+<th class="head"><p>Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Number of games processed</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Size of games processed</p></td>
+<td><p>GB</p></td>
+</tr>
+<tr class="row-even"><td><p>Number of observations</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Size of observations</p></td>
+<td><p>GB</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="the-tricky-bit">
+<h3>The Tricky Bit<a class="headerlink" href="#the-tricky-bit" title="Link to this heading">¶</a></h3>
+<p>The size of the database is considerable, and difficult to fit onto RAM all at
+once. It becomes necessary then to split the database to be loaded to RAM
+piecemeal. This presents a few issues, particularly when batching data:</p>
+<ul class="simple">
+<li><p>RAM usage must remain stable as one piece finishes and the next is loaded.</p></li>
+<li><p>Multiprocessing must remain possible to expedite batching</p></li>
+</ul>
 </section>
 </section>
 <section id="machine-learning-engineering">
