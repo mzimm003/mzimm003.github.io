@@ -26,7 +26,7 @@
   </head><body>
   <div class="document">
     
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
 <p class="logo">
   <a href="../../index.html">
@@ -80,6 +80,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#generative-model">Generative Model</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#references">References:</a></li>
 </ul>
 </li>
 </ul>
@@ -124,9 +125,19 @@
 allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
 </p><section id="play-a-bot">
 <h2>Play A Bot<a class="headerlink" href="#play-a-bot" title="Link to this heading">¶</a></h2>
-<p>Select a bot to play. Learn more about their construction below.</p>
-<p><em>Under Construction</em></p>
-</section>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">App</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Select a bot to play. Learn more about their construction below.</p>
+<p>
+<iframe
+src="https://mzimm003-playchessvsai.hf.space"
+frameborder="0"
+width="1200"
+height="1100"
+></iframe>
+</p></div>
+</details></section>
 <section id="data-engineering">
 <h2>Data Engineering<a class="headerlink" href="#data-engineering" title="Link to this heading">¶</a></h2>
 <p>The goal of the database supporting our chess bot is to have a large number of
@@ -261,8 +272,8 @@ while.</p>
 <a class="reference internal image-reference" href="../../_images/dataProcessing.png"><img alt="../../_images/dataProcessing.png" class="align-center" src="../../_images/dataProcessing.png" style="width: 467.95px; height: 243.95px;" />
 </a>
 <p>Further, the database is refined to concentrate on more relevant datapoints. On
-advice provided by the <a class="reference external" href="https://arxiv.org/abs/1711.09667">DeepChess</a> paper,
-this includes avoiding positions very early in the game (first 5 moves),
+advice provided by the <a class="reference external" href="https://arxiv.org/abs/1711.09667">DeepChess</a> <sup>1</sup>
+paper, this includes avoiding positions very early in the game (first 5 moves),
 positions immediately after the capture of a piece, and games which ended in a
 draw.</p>
 </section>
@@ -276,36 +287,115 @@ draw.</p>
 </thead>
 <tbody>
 <tr class="row-even"><td><p>Number of games processed</p></td>
-<td></td>
+<td><p>300,000</p></td>
 </tr>
 <tr class="row-odd"><td><p>Size of games processed</p></td>
-<td><p>GB</p></td>
+<td><p>0.3 GB</p></td>
 </tr>
 <tr class="row-even"><td><p>Number of observations</p></td>
-<td></td>
+<td><p>5,875,812</p></td>
 </tr>
-<tr class="row-odd"><td><p>Size of observations</p></td>
-<td><p>GB</p></td>
+<tr class="row-odd"><td><p>Size of labels</p></td>
+<td><p>2.0 GB</p></td>
+</tr>
+<tr class="row-even"><td><p>Size of observations</p></td>
+<td><p>69.0 GB</p></td>
 </tr>
 </tbody>
 </table>
 </section>
 <section id="the-tricky-bit">
 <h3>The Tricky Bit<a class="headerlink" href="#the-tricky-bit" title="Link to this heading">¶</a></h3>
-<p>The size of the database is considerable, and difficult to fit onto RAM all at
-once. It becomes necessary then to split the database to be loaded to RAM
-piecemeal. This presents a few issues, particularly when batching data:</p>
-<ul class="simple">
-<li><p>RAM usage must remain stable as one piece finishes and the next is loaded.</p></li>
-<li><p>Multiprocessing must remain possible to expedite batching</p></li>
-</ul>
-</section>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-text">The Tricky Bit</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">The size of the database is considerable. This makes the games difficult to parse
+and the observation data difficult to fit onto RAM all at once.</p>
+<p class="sd-card-text">To address the difficulty of parsing over 1M games (necessary even when limiting
+the database to 300,000 games to avoid draws), I created a custom iterator which
+leverages python’s Pandas library. This iterator combined with a multiprocess
+mapping ensures the database is created quickly with efficient use of compute
+power and memory. Each process will save the observations to the hard drive
+while accumulating observation label information in RAM up to some specified
+limit (14,000 games in my case). The label information is then also saved to the
+hard drive with a master file keeping track of which label files contain
+the metadata for which observations (e.g. label_file_1 contains metadata for
+the first 200,000 observations). This procedure allows the database to easily
+scale, dependent on the available games supplied by PGN file, the available RAM,
+and the available hard drive space.</p>
+<p class="sd-card-text">This also addresses the second issue of fitting all observation data into RAM at
+once. The label files which contain the metadata for the observations, including
+their location on the hard drive, can then be loaded one at a time and have all
+their observations processed before moving on to the next set of observations
+represented by the next label file.</p>
+<p class="sd-card-text">This is complicated somewhat by the idea that the GPU used to train our model
+will be much faster at processing than the CPU loading data from the hard drive.
+This means it is prudent to enable multiprocessing and batching when loading the
+data to be trained on. To ensure RAM usage is stable:</p>
+<ol class="arabic simple">
+<li><p class="sd-card-text">Indices must be served in order. So if selected randomly, as with a data
+split, those selected must be sorted.</p></li>
+<li><p class="sd-card-text">Two label files should be in RAM, where one fails to complete a batch, the
+next can take over.</p></li>
+<li><p class="sd-card-text">Once the end of a label file is reached, a lock should be used to pause all
+but one process which handles opening the next label file (and closing the
+oldest one).</p></li>
+<li><p class="sd-card-text">Since <a class="reference external" href="https://pytorch.org/docs/stable/index.html">Pytorch’s</a> dataloader is
+being used, special considerations must be made in how data labels are stored,
+avoiding lists and dicts, described in detail in my repo
+<a class="reference external" href="https://mzimm003.github.io/Chess/build/html/_autosummary/my_chess.learner.datasets.dataset.Dataset.html">documentation</a>.</p></li>
+</ol>
+</div>
+</details></section>
 </section>
 <section id="machine-learning-engineering">
 <h2>Machine Learning Engineering<a class="headerlink" href="#machine-learning-engineering" title="Link to this heading">¶</a></h2>
+<p>Now with the ability to create a database full of observations of some of the
+best players (bots) in the world, we have a strong basis to support the
+creation of our own chess bot. There are many machine learning approaches to
+achieve a viable chess bot, so multiple will be explored.</p>
+<p>The first will be an application of supervised learning. This is a
+straight-forward use of the generated dataset, where the observations serve as
+input to our model which then attempts to approximate labels also provided by
+the database. The approximation attempts are graded, measuring their error, and
+the model’s parameters are adjusted to improve.</p>
 <section id="supervised-learning">
 <h3>Supervised Learning<a class="headerlink" href="#supervised-learning" title="Link to this heading">¶</a></h3>
-<p><strong>Autoencoding-</strong></p>
+<p>The goal is to create a model capable of classifying a given position, or chess
+board observation, as either winning or losing. More specifically, when
+comparing two observations it should be able to deem which is winning and which
+is losing. Then, incorporate this scheme as a heuristic evaluation for a classic
+minimax game tree search. This effort is lead by the DeepChess <sup>1</sup> research
+paper.</p>
+<p><strong>Autoencoding-</strong> To start, a randomly initialized model, of any shape, will
+know nothing about chess. It will know nothing about strategy, have no
+expectation of how a game might play out, and not understand the interdependence
+of pieces on the board. This will make classifying one board state as better
+than another quite difficult. So, first a feature extractor, something that
+does understand the intricacies of the game, will be useful to inform our
+classifier.</p>
+<p>Autoencoding is one way to create a competent feature extractor, without relying
+on a lot of manual feature engineering. In short, the original observation
+serves as input and the objective label. In between, a model which allows for
+less and less information to be passed after each layer, and its mirror image.
+The model then encodes the observation in a way meaningful enough that the
+mirror image can decode and rebuild the original observation. If the observation
+is rebuilt well, the features captured must be useful and relevant
+representations of the game.</p>
+<p>To help train, we initially avoid forcing the model to reconstitute the
+observation from the fully condensed form. Instead, for each batch, we take a
+slice of the model to first train the larger layers, closer to the size of the
+observation. Then we train on the batch again, including the next layer of the
+model, and so on until the entire model is included. This reinforces the idea
+of gradually more abstract concepts being captured by the feature extractor as
+the observation is processed deeper within the model.</p>
+<figure class="align-center" id="id2">
+<a class="reference internal image-reference" href="../../_images/autoencoder.png"><img alt="../../_images/autoencoder.png" src="../../_images/autoencoder.png" style="width: 679.0px; height: 423.0px;" />
+</a>
+<figcaption>
+<p><span class="caption-text">Autoencoding training process per batch.</span><a class="headerlink" href="#id2" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
 <p><strong>Classification-</strong></p>
 <p><strong>MiniMax Search-</strong></p>
 </section>
@@ -315,6 +405,12 @@ piecemeal. This presents a few issues, particularly when batching data:</p>
 <section id="generative-model">
 <h3>Generative Model<a class="headerlink" href="#generative-model" title="Link to this heading">¶</a></h3>
 </section>
+</section>
+<section id="references">
+<h2>References:<a class="headerlink" href="#references" title="Link to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>David, O., Netanyahu, N., &amp; Wolf, L. (2016). DeepChess: End-to-End Deep Neural Network for Automatic Learning in Chess. Springer International Publishing.</p></li>
+</ol>
 </section>
 </section>
 
@@ -329,7 +425,7 @@ piecemeal. This presents a few issues, particularly when batching data:</p>
       &#169;2024, Mark Zimmerman.
       
       |
-      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.7</a>
       &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
       
       |
