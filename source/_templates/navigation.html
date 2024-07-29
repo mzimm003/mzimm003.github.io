@@ -1,5 +1,5 @@
 {% if theme_extra_nav_links %}
-<ul>
+<ul style="list-style-type: '➤';">
     {% for text, uri in theme_extra_nav_links.items() %}
     {% if not "www" in uri %}
         <li class="toctree-l1"><a href="{{  pathto(uri, 1) }}">{{ text }}</a></li>
@@ -10,5 +10,5 @@
 </ul>
 <hr />
 {% endif %}
-<h3>{{ _('Navigation') }}</h3>
+<h4>{{ _('Navigation') }}</h4>
 {{ toctree(includehidden=theme_sidebar_includehidden, collapse=theme_sidebar_collapse) }}
