@@ -35,3 +35,7 @@ Projects
 
 :ref:`Kaggle`
 ^^^^^^^^^^^^^^^^^^
+
+* :ref:`isic`
+
+   Develop image-based algorithms to identify histologically confirmed skin cancer cases with single-lesion crops from 3D total body photos.
