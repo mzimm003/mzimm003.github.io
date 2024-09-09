@@ -36,7 +36,7 @@ html_theme_options = {
     "extra_nav_links":{
         "LinkedIn":"https://www.linkedin.com/in/mark-zimmerman-122b1a60/",
         "GitHub":"https://www.github.com/mzimm003",
-        "Resume":"_static/Mark_Zimmerman_Resume_5.2024_MLE.pdf"},
+        "Resume":"_static/Mark_Zimmerman_Resume.pdf"},
     "fixed_sidebar":True,
     "sidebar_width":"15%",
     "page_width":"90%"
