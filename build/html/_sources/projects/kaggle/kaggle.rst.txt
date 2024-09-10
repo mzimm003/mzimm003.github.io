@@ -11,3 +11,9 @@ of any competition for more detail on my efforts.
 
 `ISIC 2024 - Skin Cancer Detection <https://mzimm003.github.io/ISIC2024/>`_
 ----------------------------------------------------------------------------
+
+Using a Vision Transformer based model I integrate additional patient feature
+data as a sequence of queries to the decoder making a classification prediction
+on how each feature relates to the image.
+
+Score: 0.126/0.200
