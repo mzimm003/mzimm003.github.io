@@ -26,8 +26,8 @@ Education
 Projects
 ---------
 
-:ref:`chess-bot`
-^^^^^^^^^^^^^^^^^^
+`Chess Bot <https://mzimm003.github.io/Chess/>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
    Machine Learning applied to chess so that I don't have to play anymore. Here I 
    compile and preprocess datasets to support endeavors in supervised learning, 
